@@ -1,0 +1,9 @@
+---
+- hosts: default
+  become: true
+  collections:
+    - nginxinc.nginx_core
+  tasks:
+    - name: Install NGINX OSS
+      ansible.builtin.import_role:
+        name: nginx
