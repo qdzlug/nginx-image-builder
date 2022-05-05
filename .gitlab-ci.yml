@@ -8,5 +8,6 @@ image:
 build:
   script:
     - apk add ansible
+    - ansible-galaxy collection install nginxinc.nginx_core
     - packer init .
     - packer build .
