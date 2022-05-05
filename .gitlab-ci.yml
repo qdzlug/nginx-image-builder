@@ -1,0 +1,11 @@
+---
+image:
+  name: hashicorp/packer:latest
+  entrypoint:
+    - '/usr/bin/env'
+    - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+
+build:
+  script:
+    - packer init .
+    - packer build .
