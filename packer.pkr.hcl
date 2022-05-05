@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     digitalocean = {
-      version = ">= 1.0.0"
+      version = "= 1.0.4"
       source  = "github.com/hashicorp/digitalocean"
     }
   }
@@ -37,6 +37,5 @@ build {
   ]
   provisioner "ansible" {
     playbook_file = "./playbook.yml"
-    use_proxy     = false
   }
 }
