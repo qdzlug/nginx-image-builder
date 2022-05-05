@@ -1,11 +1,12 @@
 ---
 image:
-  name: hashicorp/packer:latest
+  name: hashicorp/packer:1.8.0
   entrypoint:
     - '/usr/bin/env'
     - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 
 build:
   script:
+    - apk add ansible
     - packer init .
     - packer build .
