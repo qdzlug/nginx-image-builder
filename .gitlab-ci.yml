@@ -10,4 +10,4 @@ build:
     - apk add ansible
     - ansible-galaxy collection install nginxinc.nginx_core
     - packer init .
-    - packer build .
+    - packer build -force .
