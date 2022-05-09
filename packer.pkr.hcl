@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     digitalocean = {
-      version = "= 1.0.4"
+      version = ">= 1.0.0"
       source  = "github.com/hashicorp/digitalocean"
     }
     googlecompute = {
@@ -75,6 +75,7 @@ build {
     "source.googlecompute.nginx",
   ]
   provisioner "ansible" {
+    galaxy_file   = "./requirements.yml"
     playbook_file = "./playbook.yml"
   }
 }
