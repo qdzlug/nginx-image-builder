@@ -69,13 +69,22 @@ source "googlecompute" "nginx" {
 }
 
 build {
-  name = "Install NGINX Open Source"
+  name = "Install NGINX Open Source (Ansible)"
   sources = [
     "source.digitalocean.nginx",
-    "source.googlecompute.nginx",
   ]
   provisioner "ansible" {
     galaxy_file   = "./requirements.yml"
     playbook_file = "./playbook.yml"
+  }
+}
+
+build {
+  name = "Install NGINX Open Source (Bash)"
+  sources = [
+    "source.googlecompute.nginx",
+  ]
+  provisioner "shell" {
+    script = "./install-nginx.sh"
   }
 }
