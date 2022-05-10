@@ -31,13 +31,13 @@ EOF
   }
 }
 
-source "digitalocean" "nginx" {
+source "digitalocean" "nginx-oss" {
   api_token     = var.digitalocean_auth
   region        = "sfo3"
-  size          = "s-1vcpu-1gb"
   image         = "ubuntu-20-04-x64"
+  size          = "s-1vcpu-1gb"
   ssh_username  = "root"
-  snapshot_name = "nginx"
+  snapshot_name = "nginx-oss"
   snapshot_regions = [
     "ams2",
     "ams3",
@@ -55,14 +55,13 @@ source "digitalocean" "nginx" {
   ]
 }
 
-source "googlecompute" "nginx" {
+source "googlecompute" "nginx-oss" {
   account_file        = var.googlecompute_auth
   project_id          = "f5-gcs-5598-mktg-nginx-bizdev"
-  source_image_family = "ubuntu-2004-lts"
   zone                = "us-west1-a"
+  source_image_family = "ubuntu-2004-lts"
   ssh_username        = "root"
-  image_name          = "nginx"
-  image_description   = "NGINX Open Source image"
+  image_name          = "nginx-oss"
   image_storage_locations = [
     "us",
   ]
@@ -71,7 +70,7 @@ source "googlecompute" "nginx" {
 build {
   name = "Install NGINX Open Source (Ansible)"
   sources = [
-    "source.digitalocean.nginx",
+    "source.digitalocean.nginx-oss",
   ]
   provisioner "ansible" {
     galaxy_file   = "./requirements.yml"
@@ -82,7 +81,7 @@ build {
 build {
   name = "Install NGINX Open Source (Bash)"
   sources = [
-    "source.googlecompute.nginx",
+    "source.googlecompute.nginx-oss",
   ]
   provisioner "shell" {
     script = "./install-nginx.sh"
