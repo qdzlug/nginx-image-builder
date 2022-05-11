@@ -23,5 +23,5 @@ As of today, this PoC includes support for two cloud distributions, `Digital Oce
 
 If you want to run this PoC locally, you will have to do a couple things beforehand:
 
-1. Install Packer
+1. Install Packer.
 2. Install Ansible (optional - alternatively you can tweak the Packer script to only use Bash). If you are running the Packer script locally, you might additionaly need to include `use_proxy = false` as a paremeter in the Ansible block.

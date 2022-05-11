@@ -10,3 +10,4 @@ build:
     - apk add ansible
     - packer init .
     - packer build -force .
+  retry: 2
