@@ -16,7 +16,7 @@ variable "digitalocean_auth" {
   validation {
     condition     = length(var.digitalocean_auth) > 0
     error_message = <<EOF
-The digitalocean_auth var is not set: make sure to set the DIGITALOCEAN_TOKEN env var.
+The digitalocean_auth variable is not set: make sure to set the DIGITALOCEAN_TOKEN environment variable.
 EOF
   }
 }
@@ -26,7 +26,7 @@ variable "googlecompute_auth" {
   validation {
     condition     = length(var.googlecompute_auth) > 0
     error_message = <<EOF
-The googlecompute_auth var is not set: make sure to set the GOOGLE_APPLICATION_CREDENTIALS env var.
+The googlecompute_auth variable is not set: make sure to set the GOOGLE_APPLICATION_CREDENTIALS environment variable.
 EOF
   }
 }
@@ -34,9 +34,10 @@ EOF
 source "digitalocean" "nginx-oss" {
   api_token     = var.digitalocean_auth
   region        = "sfo3"
-  image         = "ubuntu-20-04-x64"
+  image         = "ubuntu-22-04-x64"
   size          = "s-1vcpu-1gb"
   ssh_username  = "root"
+  droplet_name  = "nginx-image-builder"
   snapshot_name = "nginx-oss"
   snapshot_regions = [
     "ams2",
@@ -68,13 +69,41 @@ source "googlecompute" "nginx-oss" {
 }
 
 build {
-  name = "Install NGINX Open Source (Ansible)"
+  name = "Install NGINX Open Source"
   sources = [
     "source.digitalocean.nginx-oss",
   ]
   provisioner "ansible" {
     galaxy_file   = "./requirements.yml"
     playbook_file = "./playbook.yml"
+    use_proxy     = false
+  }
+  provisioner "file" {
+    content     = "#!/bin/sh\nset -ex\n\napt-get update\napt-get install --only-upgrade -y nginx\n\n"
+    destination = "/var/lib/cloud/scripts/per-instance/update_nginx.sh"
+  }
+  provisioner "shell" {
+    inline = [
+      "chmod +x /var/lib/cloud/scripts/per-instance/update_nginx.sh",
+      "ufw limit 22",
+      "ufw allow 80",
+      "ufw allow 443",
+      "ufw --force enable",
+    ]
+  }
+  provisioner "shell" {
+    scripts = [
+      "digitalocean/cleanup.sh",
+      "digitalocean/image-check.sh",
+    ]
+  }
+  provisioner "shell" {
+    inline = [
+      "rm /var/log/auth.log",
+      "rm /var/log/cloud-init-output.log",
+      "rm /var/log/kern.log",
+      "rm /var/log/ufw.log",
+    ]
   }
 }
 
